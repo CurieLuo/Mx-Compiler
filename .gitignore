@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+out/
+gen/
+META-INF/
+result/
+*.exe
+*.ps
+test.*
+*.iml
