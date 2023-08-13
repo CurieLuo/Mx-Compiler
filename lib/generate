@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+clang -S -fobjc-arc -emit-llvm -O2 builtins.c -o builtins_temp.ll
+sed 's/string_/string::/g;s/array_/array::/g' builtins_temp.ll > builtins.ll
+rm builtins_temp.ll

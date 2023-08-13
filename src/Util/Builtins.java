@@ -1,6 +1,8 @@
 package Util;
 
 import AST.*;
+import MIR.Entity.*;
+import MIR.Type.*;
 
 public class Builtins {
     // only for assigning type to expression
@@ -14,6 +16,7 @@ public class Builtins {
             intClass = new ClassDefNode(null, "int"),
             boolClass = new ClassDefNode(null, "bool"),
             stringClass = new ClassDefNode(null, "string");
+    public static ClassScope arrayClassScope = new ClassScope("");
 
     public static FuncDefNode print = new FuncDefNode(null, "print"),
             println = new FuncDefNode(null, "println"),
@@ -23,13 +26,27 @@ public class Builtins {
             getInt = new FuncDefNode(null, "getInt"),
             toString = new FuncDefNode(null, "toString");
 
-    /*public*/ FuncDefNode length = new FuncDefNode(null, "length"),
+    /*public*/ static FuncDefNode length = new FuncDefNode(null, "length"),
             substring = new FuncDefNode(null, "substring"),
             parseInt = new FuncDefNode(null, "parseInt"),
-            ord = new FuncDefNode(null, "ord");
+            ord = new FuncDefNode(null, "ord"),
+            size = new FuncDefNode(null, "size");
 
-    public static ClassScope arrayClassScope = new ClassScope("");
-    public static FuncDefNode size = new FuncDefNode(null, "size");
+    public static IRType irVoidType = new IRVoidType(),
+            irCharType = new IRIntType(8),
+            irBoolType = irCharType,
+            irCondType = new IRIntType(1),
+            irIntType = new IRIntType(32),
+            irNullType = new IRPtrType(irVoidType),
+            irStringType = new IRPtrType(irCharType); //TODO use C-string!!!
+
+    public static IRConst irNull = new IRNullConst(),
+            irCondTrue = new IRCondConst(true),
+            irCondFalse = new IRCondConst(false),
+            irBoolTrue = new IRBoolConst(true),
+            irBoolFalse = new IRBoolConst(false),
+            irInt0 = new IRIntConst(0),
+            irInt1 = new IRIntConst(1);
 
     public Builtins() {
         ParamsListNode paramString = new ParamsListNode(null);

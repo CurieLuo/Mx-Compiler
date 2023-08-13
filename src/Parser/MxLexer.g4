@@ -1,4 +1,5 @@
 lexer grammar MxLexer;
+@header{package Parser;}
 
 BlockComment: '/*' .*? '*/' -> skip;
 LineComment: '//' ~[\r\n\u2028\u2029]* -> skip;

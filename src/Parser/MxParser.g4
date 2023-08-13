@@ -2,6 +2,7 @@ parser grammar MxParser;
 options {
 	tokenVocab = MxLexer;
 }
+@header{package Parser;}
 
 program: programComponent* EOF;
 programComponent: funcDef | classDef | varDefStmt;

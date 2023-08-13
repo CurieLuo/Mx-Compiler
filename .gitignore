@@ -8,3 +8,4 @@ result/
 *.ps
 test.*
 *.iml
+*.jar

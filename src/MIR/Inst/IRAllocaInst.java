@@ -1,0 +1,23 @@
+package MIR.Inst;
+
+import MIR.BasicBlock;
+import MIR.Entity.IRRegister;
+import MIR.Type.IRPtrType;
+import MIR.Type.IRType;
+
+public class IRAllocaInst extends IRInst {
+    public IRRegister reg;
+
+    public IRType type;
+
+    public IRAllocaInst(BasicBlock parentBlock, IRRegister reg) {
+        super(parentBlock);
+        this.reg = reg;
+        this.type = ((IRPtrType) reg.type).pointToType();
+    }
+
+    @Override
+    public String toString() {
+        return "%s = alloca %s".formatted(reg, type);
+    }
+}

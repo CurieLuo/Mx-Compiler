@@ -1,6 +1,5 @@
-package Parser;
-
 // Generated from MxParser.g4 by ANTLR 4.13.0
+package Parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**

@@ -2,7 +2,7 @@ package Util.error;
 
 import Util.position;
 
-abstract public class error extends RuntimeException {
+public abstract class error extends RuntimeException {
     private position pos;
     private String message;
 

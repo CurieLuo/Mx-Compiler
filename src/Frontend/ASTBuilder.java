@@ -15,9 +15,9 @@ public class ASTBuilder extends MxParserBaseVisitor<ASTNode> {
 //        this.gScope = gScope;
     }
 
-    private void print(String s) {
-        System.out.println(s);
-    }
+//    private void print(String s) {
+//        System.out.println(s);
+//    }
 
     @Override
     public ASTNode visitProgram(MxParser.ProgramContext ctx) {

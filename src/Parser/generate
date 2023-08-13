@@ -6,7 +6,7 @@ javac *.java
 #java org.antlr.v4.gui/TestRig Mx program -ps Mx.ps
 rm *.class
 
-for f in *.java;
-do
-sed -i "1i package Parser;\n" "$f"
-done
+#for f in *.java;
+#do
+#sed -i "1i package Parser;\n" "$f"
+#done

@@ -17,9 +17,9 @@ public class SemanticChecker implements ASTVisitor {
         currentScope = this.gScope = gScope;
     }
 
-    private void print(String s) {
-        System.out.println(s);
-    }
+//    private void print(String s) {
+//        System.out.println(s);
+//    }
 
     private void enterNewScope() {
         currentScope = new Scope(currentScope);
@@ -43,9 +43,7 @@ public class SemanticChecker implements ASTVisitor {
                 FuncDefNode funcDef = (FuncDefNode) def;
                 if (funcDef.name.equals("main") && funcDef.returnType.equals(Builtins.intType) && (funcDef.params == null || funcDef.params.types.isEmpty())) {
                     hasMain = true;
-
-                    funcDef.body.stmts.add(new ReturnStmtNode(null, (ExprNode) new AtomExprNode(null, "0")));
-                    //TODO main() returns 0 by default
+                    //TODO record main; main() returns 0 by default
                 }
             }
 
@@ -64,12 +62,13 @@ public class SemanticChecker implements ASTVisitor {
                 def.accept(this);
             }
         }
-        it.scope.removeVars();
-        for (var def : it.defs) {
-            if (def instanceof VarDefStmtNode) {
-                def.accept(this);
-            }
-        }
+
+//        it.scope.removeVars();
+//        for (var def : it.defs) {
+//            if (def instanceof VarDefStmtNode) {
+//                def.accept(this);
+//            }
+//        } //support member variable initialization
 
         currentScope = gScope;
     }
@@ -83,7 +82,7 @@ public class SemanticChecker implements ASTVisitor {
 
         if (it.params != null) it.params.accept(this);
         visitInScope(it.body);
-        if (!it.returnType.isVoid() && !functionReturns)
+        if (!it.returnType.isVoid() && !functionReturns && !(it.name.equals("main") && currentScope.parentScope == gScope))
             throw new semanticError("non-void function has no return statement", it.pos);
 
         traceBack();
@@ -244,7 +243,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(NewExprNode it) {
-        if (it.type.isBasicType() || it.type.isString())
+        if (it.type.isBasicType())
             throw new semanticError("new expression invalid type", it.pos);
         it.initDims.forEach(dim -> {
             dim.accept(this);

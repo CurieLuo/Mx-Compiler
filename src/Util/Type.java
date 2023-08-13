@@ -42,8 +42,8 @@ public class Type {
     }
 
     public boolean isBasicType() {
-        return isBool() || isInt();
-    }
+        return isBool() || isInt() || isString();
+    } // TODO
 
     @Override
     public boolean equals(Object obj) {

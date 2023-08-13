@@ -14,7 +14,7 @@ try:
 
     for judge in judge_list:
         cnt += 1
-        input_file = judge.replace("\n", "").replace("./", path + "testcases/sema/")
+        input_file = path + "testcases/sema/" + judge.replace("\n", "")
         output_file = path + "result/" + str(cnt) + ".txt"
         print("testing case:", cnt, input_file)
 
@@ -40,10 +40,11 @@ try:
         else:
             print("\033[31m[Failed] [test]:, point " + str(cnt))
             lose += 1
-##            input("continue:")
+            #input("continue:")
         print()
     print("all:", cnt)
     print("success:", win)
 except Exception as e:
     print(e)
     input()
+input("quit:")
