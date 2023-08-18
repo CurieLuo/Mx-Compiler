@@ -9,7 +9,7 @@ public class NewExprNode extends ExprNode {
 
     public NewExprNode(position pos) {
         super(pos);
-        assignable = true;
+        assignable = false;
     }
 
     @Override

@@ -219,6 +219,8 @@ public class ASTBuilder extends MxParserBaseVisitor<ASTNode> {
         NewExprNode newExpr = new NewExprNode(new position(ctx));
         newExpr.type = new Type(ctx.simpleType().getText(), ctx.LeftBracket().size());
         ctx.expr().forEach(dim -> newExpr.initDims.add((ExprNode) visit(dim)));
+        if (newExpr.initDims.isEmpty() && newExpr.type.isArray())
+            throw new semanticError("invalid new expression dimensions", new position(ctx));
         return newExpr;
     }
 

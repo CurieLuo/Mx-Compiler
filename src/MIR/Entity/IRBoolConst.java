@@ -10,9 +10,12 @@ public class IRBoolConst extends IRConst {
         this.val = val;
     }
 
+    public static IRBoolConst instance(boolean val) {
+        return val ? Builtins.irBoolTrue : Builtins.irBoolFalse;
+    }
+
     @Override
     public String toString() {
-//        return val ? "true" : "false";
-        return val ? "1" : "0"; //TODO
+        return val ? "true" : "false";
     }
 }

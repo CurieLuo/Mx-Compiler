@@ -7,7 +7,7 @@ import MIR.Entity.Entity;
 public abstract class ExprNode extends ASTNode {
     public Type type;
     public boolean assignable = false;
-    public Entity val;
+    public Entity val = null;
 
     public ExprNode(position pos) {
         super(pos);

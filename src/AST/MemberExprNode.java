@@ -8,6 +8,7 @@ public class MemberExprNode extends ExprNode {
 
     public MemberExprNode(position pos) {
         super(pos);
+        assignable = true;
     }
 
     @Override

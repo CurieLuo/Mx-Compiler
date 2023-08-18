@@ -16,7 +16,7 @@ public class Builtins {
             intClass = new ClassDefNode(null, "int"),
             boolClass = new ClassDefNode(null, "bool"),
             stringClass = new ClassDefNode(null, "string");
-    public static ClassScope arrayClassScope = new ClassScope("");
+    public static ClassScope arrayClassScope = new ClassScope("mx.array");
 
     public static FuncDefNode print = new FuncDefNode(null, "print"),
             println = new FuncDefNode(null, "println"),
@@ -34,19 +34,20 @@ public class Builtins {
 
     public static IRType irVoidType = new IRVoidType(),
             irCharType = new IRIntType(8),
-            irBoolType = irCharType,
-            irCondType = new IRIntType(1),
+            irBoolType = new IRIntType(1),
             irIntType = new IRIntType(32),
             irNullType = new IRPtrType(irVoidType),
-            irStringType = new IRPtrType(irCharType); //TODO use C-string!!!
+            irStringType = new IRPtrType(irCharType), //TODO use C-string!!!
+            irIntPtrType = new IRPtrType(irIntType);
 
-    public static IRConst irNull = new IRNullConst(),
-            irCondTrue = new IRCondConst(true),
-            irCondFalse = new IRCondConst(false),
-            irBoolTrue = new IRBoolConst(true),
-            irBoolFalse = new IRBoolConst(false),
-            irInt0 = new IRIntConst(0),
-            irInt1 = new IRIntConst(1);
+    public static IRVoidConst irVoid = new IRVoidConst();
+    //    public static IRNullConst irNull = new IRNullConst();
+    public static IRBoolConst irBoolTrue = new IRBoolConst(true),
+            irBoolFalse = new IRBoolConst(false);
+    public static IRIntConst irInt0 = new IRIntConst(0),
+            irInt1 = new IRIntConst(1),
+            irIntNegative1 = new IRIntConst(-1),
+            irInt4 = new IRIntConst(4);
 
     public Builtins() {
         ParamsListNode paramString = new ParamsListNode(null);
@@ -60,7 +61,6 @@ public class Builtins {
         paramsIntInt.names.add("left");
         paramsIntInt.types.add(intType);
         paramsIntInt.names.add("right");
-        //TODO different param names for the same type
 
         print.params = println.params = paramString;
         printInt.params = printlnInt.params = toString.params = paramInt;

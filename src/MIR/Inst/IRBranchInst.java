@@ -7,8 +7,8 @@ public class IRBranchInst extends IRTerminatorInst {
     public Entity condition;
     public BasicBlock trueBlock, falseBlock;
 
-    public IRBranchInst(BasicBlock parentBlock, Entity condition, BasicBlock trueBlock, BasicBlock falseBlock) {
-        super(parentBlock);
+    public IRBranchInst(Entity condition, BasicBlock trueBlock, BasicBlock falseBlock) {
+        super();
         this.condition = condition;
         this.trueBlock = trueBlock;
         this.falseBlock = falseBlock;

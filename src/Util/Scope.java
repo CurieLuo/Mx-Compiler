@@ -1,7 +1,7 @@
 package Util;
 
-//import MIR.register;
-
+import AST.LoopStmtNode;
+import MIR.Entity.IRRegister;
 import Util.error.semanticError;
 
 import java.util.HashMap;
@@ -9,26 +9,19 @@ import java.util.HashMap;
 public class Scope {
 
     protected HashMap<String, Type> vars = new HashMap<>();
-    //    public HashMap<String, register> entities = new HashMap<>();
     public Scope parentScope;
 
     public Scope(Scope parentScope) {
         this.parentScope = parentScope;
         if (parentScope != null) {
-            inLoop = parentScope.inLoop;
-//            inFunc = parentScope.inFunc;
+            loop = parentScope.loop;
             returnType = parentScope.returnType;
-//            inClass = parentScope.inClass;
             classType = parentScope.classType;
             classScope = parentScope.classScope;
         }
     }
 
-//    public Scope getParentScope() {
-//        return parentScope;
-//    }
-
-    public boolean inLoop = false;
+    public LoopStmtNode loop = null;
     public Type returnType = null,
             classType = null;
     public ClassScope classScope = null;
@@ -55,10 +48,20 @@ public class Scope {
         else return null;
     }
 
-//    public register getEntity(String name, boolean lookUpon) {
-//        if (entities.containsKey(name)) return entities.get(name);
-//        else if (parentScope != null && lookUpon)
-//            return parentScope.getEntity(name, true);
-//        return null;
-//    }
+    public HashMap<String, IRRegister> entities = new HashMap<>();
+
+    public void addEntity(IRRegister entity) {
+        entities.put(entity.name, entity);
+    }
+
+    public IRRegister getEntity(String name) {
+        if (entities.containsKey(name)) return entities.get(name);
+        else if (parentScope != null)
+            return parentScope.getEntity(name);
+        else return null;
+    }
+
+    public void removeVars() {
+        vars.clear();
+    }
 }

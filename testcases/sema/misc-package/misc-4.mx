@@ -28,7 +28,7 @@ class ClassA{
 		return str;
 	}
 };
-int Compiler(int parameter){
+int Main(int parameter){
 	ClassA a = new ClassA;
 	ClassA b = a.getClassA(parameter);
 	b.num = parameter;
@@ -57,5 +57,5 @@ int Compiler(int parameter){
 	return num;
 }
 int main() {
-    Compiler(0);
+    Main(0);
 }

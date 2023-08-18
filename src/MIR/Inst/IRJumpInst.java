@@ -5,8 +5,8 @@ import MIR.BasicBlock;
 public class IRJumpInst extends IRTerminatorInst {
     public BasicBlock destBlock;
 
-    public IRJumpInst(BasicBlock parentBlock, BasicBlock destBlock) {
-        super(parentBlock);
+    public IRJumpInst(BasicBlock destBlock) {
+        super();
         this.destBlock = destBlock;
     }
 

@@ -1,12 +1,16 @@
 package AST;
 
+import MIR.Entity.Entity;
 import Util.ClassScope;
 import Util.position;
 
 public class FuncExprNode extends ExprNode {
-    public ClassScope cScope = null;
+
     public String name;
     public ArgsListNode args;
+
+    public ClassScope cScope = null;
+    public Entity owner = null;
 
     public FuncExprNode(position pos, String name) {
         super(pos);

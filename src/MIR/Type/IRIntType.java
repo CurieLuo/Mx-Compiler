@@ -7,12 +7,12 @@ public class IRIntType extends IRType {
     public int bits;
 
     public IRIntType(int bits) {
-        super("i" + bits, bits / 8);
+        super("i" + bits, (bits + 7) / 8);
         this.bits = bits;
     }
 
     @Override
     public Entity defaultValue() {
-        return Builtins.irInt0;
+        return size == 4 ? Builtins.irInt0 : Builtins.irBoolFalse;
     }
 }

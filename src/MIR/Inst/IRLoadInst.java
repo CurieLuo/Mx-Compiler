@@ -8,8 +8,8 @@ public class IRLoadInst extends IRInst {
     public IRRegister reg;
     public Entity pointer;
 
-    public IRLoadInst(BasicBlock parentBlock, IRRegister reg, Entity pointer) {
-        super(parentBlock);
+    public IRLoadInst(IRRegister reg, Entity pointer) {
+        super();
         this.reg = reg;
         this.pointer = pointer;
     }

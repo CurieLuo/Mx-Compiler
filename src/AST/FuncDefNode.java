@@ -18,7 +18,6 @@ public class FuncDefNode extends ASTNode implements ProgramComponent, ClassCompo
         super(pos);
         this.name = name;
         params = new ParamsListNode(pos);
-//        body = new BlockStmtNode(pos); //TODO builtins
     }
 
     @Override

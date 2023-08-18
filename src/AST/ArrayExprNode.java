@@ -7,6 +7,7 @@ public class ArrayExprNode extends ExprNode {
 
     public ArrayExprNode(position pos) {
         super(pos);
+        assignable = true;
     }
 
     @Override

@@ -1,3 +1,11 @@
 #!/bin/bash
 
-java -cp "/usr/share/java/antlr-4.13.0-complete.jar:$(dirname $0)" Compiler $@
+# java -cp "/usr/share/java/antlr-4.13.0-complete.jar:$(dirname $0)" Compiler $@
+java -cp "../antlr-4.13.0-complete.jar:$(dirname $0)" Compiler $@
+
+#../testcases/sema/scripts/test_all.bash './mxc -fsyntax-only' ../testcases/sema
+#../testcases/codegen/scripts/test_llvm_ir_all.bash ./mxc ../testcases/codegen ./builtin.ll
+#../testcases/codegen/scripts/test_llvm_ir.bash ./mxc ../test.mx ./builtin.ll
+
+# ./mxc <../test.mx >output.ll
+# clang-15 output.ll builtin.ll -m32 -o exe

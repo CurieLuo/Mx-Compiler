@@ -24,7 +24,7 @@ public class AtomExprNode extends ExprNode {
                 char beg = content.charAt(0);
                 if (beg == '"') {
                     isString = true;
-                    this.content = content.replace("\\\\", "\\")
+                    this.content = content.substring(1, content.length() - 1).replace("\\\\", "\\")
                             .replace("\\n", "\n")
                             .replace("\\\"", "\""); // unescape
                 } else if ('0' <= beg && beg <= '9') isInt = true;

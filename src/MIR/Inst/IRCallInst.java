@@ -1,9 +1,7 @@
 package MIR.Inst;
 
-import MIR.BasicBlock;
 import MIR.Entity.Entity;
 import MIR.Entity.IRRegister;
-import MIR.Type.IRPtrType;
 
 import java.util.ArrayList;
 
@@ -12,9 +10,17 @@ public class IRCallInst extends IRInst {
     public String name;
     public ArrayList<Entity> args = new ArrayList<>();
 
-    public IRCallInst(BasicBlock parentBlock, IRRegister reg, IRPtrType pointer) {
-        super(parentBlock);
+    public IRCallInst(IRRegister reg, String name) {
+        super();
         this.reg = reg;
+        this.name = name;
+    }
+
+    public IRCallInst(IRRegister reg, String name, Entity... args) {
+        super();
+        this.reg = reg;
+        this.name = name;
+        for (var arg : args) addArg(arg);
     }
 
     public void addArg(Entity arg) {
@@ -23,7 +29,7 @@ public class IRCallInst extends IRInst {
 
     @Override
     public String toString() {
-        String ret = reg == null ? "call void" : "%s = call %s".formatted(reg, reg.type);
+        String ret = reg == null ? "call void " : "%s = call %s ".formatted(reg, reg.type);
         ret += "@%s(".formatted(name);
         for (int i = 0, n = args.size(); i < n; i++) {
             if (i != 0) ret += ", ";

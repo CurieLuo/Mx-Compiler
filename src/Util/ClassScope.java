@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class ClassScope extends Scope {
 
-    private String name;
+    public String name;
     private HashMap<String, FuncDefNode> funcs = new HashMap<>();
     private ConstructorDefNode constructor = null;
 
@@ -53,9 +53,5 @@ public class ClassScope extends Scope {
 
     public ConstructorDefNode getConstructor() {
         return constructor;
-    }
-
-    public void removeVars() {
-        vars.clear();
     }
 }

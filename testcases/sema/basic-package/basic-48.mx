@@ -9,7 +9,7 @@ Origin Package: Semantic Pretest
 */
 // no main
 int main;
-class Compiler {
+class Main {
     int main() {
         return 0;
     }

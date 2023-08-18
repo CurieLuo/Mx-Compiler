@@ -15,6 +15,7 @@ public class ClassDefNode extends ASTNode implements ProgramComponent {
         super(pos);
         this.name = name;
         scope = new ClassScope(name);
+        super.scope = scope;
     }
 
     @Override

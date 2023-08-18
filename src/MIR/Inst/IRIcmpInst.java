@@ -1,6 +1,5 @@
 package MIR.Inst;
 
-import MIR.BasicBlock;
 import MIR.Entity.Entity;
 import MIR.Entity.IRRegister;
 import MIR.Type.IRType;
@@ -12,8 +11,8 @@ public class IRIcmpInst extends IRInst {
 
     public Entity left, right;
 
-    public IRIcmpInst(BasicBlock parentBlock, IRRegister reg, String op, Entity left, Entity right) {
-        super(parentBlock);
+    public IRIcmpInst(IRRegister reg, String op, Entity left, Entity right) {
+        super();
         this.reg = reg;
         this.op = op;
         this.type = left.type;

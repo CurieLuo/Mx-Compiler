@@ -3,7 +3,6 @@ package Frontend;
 import AST.*;
 import Util.ClassScope;
 import Util.GlobalScope;
-import Util.Scope;
 
 public class SymbolCollector implements ASTVisitor {
 
@@ -25,12 +24,6 @@ public class SymbolCollector implements ASTVisitor {
         cScope.parentScope = gScope;
         gScope.defineClass(it);
         it.defs.forEach(def -> def.accept(this));
-        if (cScope.getConstructor() == null) {
-            ConstructorDefNode defaultConstructor = new ConstructorDefNode(null, it.name);
-            defaultConstructor.body = new BlockStmtNode(null);
-            it.defs.add(defaultConstructor);
-            defaultConstructor.accept(this);
-        }
         cScope = null;
     }
 

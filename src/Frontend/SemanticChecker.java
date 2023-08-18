@@ -21,8 +21,9 @@ public class SemanticChecker implements ASTVisitor {
 //        System.out.println(s);
 //    }
 
-    private void enterNewScope() {
+    private void enterNewScope(ASTNode it) {
         currentScope = new Scope(currentScope);
+        it.scope = currentScope;
     }
 
     private void traceBack() {
@@ -39,11 +40,9 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(RootNode it) {
         boolean hasMain = false;
         for (var def : it.defs) {
-            if (!hasMain && def instanceof FuncDefNode) {
-                FuncDefNode funcDef = (FuncDefNode) def;
+            if (!hasMain && def instanceof FuncDefNode funcDef) {
                 if (funcDef.name.equals("main") && funcDef.returnType.equals(Builtins.intType) && (funcDef.params == null || funcDef.params.types.isEmpty())) {
                     hasMain = true;
-                    //TODO record main; main() returns 0 by default
                 }
             }
 
@@ -75,12 +74,11 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(FuncDefNode it) {
-        enterNewScope();
-//        currentScope.inFunc = true;
+        enterNewScope(it);
         currentScope.returnType = it.returnType;
         functionReturns = false;
 
-        if (it.params != null) it.params.accept(this);
+        it.params.accept(this);
         visitInScope(it.body);
         if (!it.returnType.isVoid() && !functionReturns && !(it.name.equals("main") && currentScope.parentScope == gScope))
             throw new semanticError("non-void function has no return statement", it.pos);
@@ -90,8 +88,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ConstructorDefNode it) {
-        enterNewScope();
-//        currentScope.inFunc = true;
+        enterNewScope(it);
         currentScope.returnType = Builtins.voidType;
 
         visitInScope(it.body);
@@ -117,12 +114,12 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(BreakStmtNode it) {
-        if (!currentScope.inLoop) throw new semanticError("break statement outside loop", it.pos);
+        if (currentScope.loop == null) throw new semanticError("break statement outside loop", it.pos);
     }
 
     @Override
     public void visit(ContinueStmtNode it) {
-        if (!currentScope.inLoop) throw new semanticError("continue statement outside loop", it.pos);
+        if (currentScope.loop == null) throw new semanticError("continue statement outside loop", it.pos);
     }
 
     @Override
@@ -137,8 +134,8 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ForStmtNode it) {
-        enterNewScope();
-        currentScope.inLoop = true;
+        enterNewScope(it);
+        currentScope.loop = it;
 
         if (it.init != null) it.init.accept(this);
         if (it.condition != null) {
@@ -153,8 +150,8 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(WhileStmtNode it) {
-        enterNewScope();
-        currentScope.inLoop = true;
+        enterNewScope(it);
+        currentScope.loop = it;
 
         it.condition.accept(this);
         if (!it.condition.type.isBool()) throw new semanticError("non-bool condition", it.pos);
@@ -167,11 +164,11 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(IfStmtNode it) {
         it.condition.accept(this);
         if (!it.condition.type.isBool()) throw new semanticError("non-bool condition", it.pos);
-        enterNewScope();
+        enterNewScope(it.trueStmt);
         visitInScope(it.trueStmt);
         traceBack();
         if (it.falseStmt != null) {
-            enterNewScope();
+            enterNewScope(it.falseStmt);
             visitInScope(it.falseStmt);
             traceBack();
         }
@@ -179,7 +176,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(BlockStmtNode it) {
-        enterNewScope();
+        enterNewScope(it);
         visitInScope(it);
         traceBack();
     }
@@ -196,13 +193,12 @@ public class SemanticChecker implements ASTVisitor {
         ClassScope cScope = gScope.getClass(it.obj.type.name);
         it.type = cScope.getMemberVarType(it.member);
         if (it.type == null) throw new semanticError("member not found", it.pos);
-        it.assignable = it.obj.assignable || !it.obj.type.isBasicType(); // ???
     }
 
     @Override
     public void visit(MemberFuncExprNode it) {
         it.obj.accept(this);
-        String objTypename = it.obj.type.name, funcName = it.memberFunc.name;
+        String objTypename = it.obj.type.name;
         it.memberFunc.cScope = it.obj.type.isArray() ?
                 Builtins.arrayClassScope :
                 gScope.getClass(objTypename);
@@ -218,7 +214,6 @@ public class SemanticChecker implements ASTVisitor {
         if (!it.index.type.isInt()) throw new semanticError("non-int index", it.pos);
         it.type = it.obj.type.copy();
         it.type.dim--;
-        it.assignable = it.obj.assignable || !it.obj.type.isBasicType();// ???
     }
 
     @Override
@@ -232,7 +227,7 @@ public class SemanticChecker implements ASTVisitor {
         else {
             if (currentScope.classScope != null) func = currentScope.classScope.getFunc(name);
             if (func == null) func = gScope.getFunc(name);
-            //TODO simplify (duplicate names for local vars!!!!!!!!!)
+            else it.cScope = currentScope.classScope;
         }
         // assumes params != null
         if (func == null || !argTypes.equals(func.params.types)) {
@@ -249,7 +244,6 @@ public class SemanticChecker implements ASTVisitor {
             dim.accept(this);
             if (!dim.type.isInt()) throw new semanticError("new expression dimension not int type", dim.pos);
         });
-        // TODO constructor call
     }
 
     @Override

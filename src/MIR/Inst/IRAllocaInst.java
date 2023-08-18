@@ -1,6 +1,5 @@
 package MIR.Inst;
 
-import MIR.BasicBlock;
 import MIR.Entity.IRRegister;
 import MIR.Type.IRPtrType;
 import MIR.Type.IRType;
@@ -10,8 +9,8 @@ public class IRAllocaInst extends IRInst {
 
     public IRType type;
 
-    public IRAllocaInst(BasicBlock parentBlock, IRRegister reg) {
-        super(parentBlock);
+    public IRAllocaInst(IRRegister reg) {
+        super();
         this.reg = reg;
         this.type = ((IRPtrType) reg.type).pointToType();
     }

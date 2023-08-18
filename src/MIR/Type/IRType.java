@@ -1,7 +1,8 @@
 package MIR.Type;
 
 import MIR.Entity.Entity;
-import Util.Builtins;
+import MIR.Entity.IREmptyConst;
+//import MIR.Entity.IRNullConst;
 
 public abstract class IRType {
     public String name;
@@ -18,8 +19,6 @@ public abstract class IRType {
     } //debug
 
     public Entity defaultValue() {
-        return Builtins.irNull;
+        return new IREmptyConst(this);
     }
-
-    ; //debug
 }

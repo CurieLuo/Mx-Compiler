@@ -1,22 +1,20 @@
 package MIR.Entity;
 
-import MIR.Type.IRArrayType;
-import MIR.Type.IRStructType;
 import MIR.Type.IRType;
 import Util.Builtins;
 
-public class IRNullConst extends IRConst {
+public class IREmptyConst extends IRConst {
 
-    public IRNullConst() {
+    public IREmptyConst() {
         super(Builtins.irNullType);
     }
 
-    public IRNullConst(IRType type) {
+    public IREmptyConst(IRType type) {
         super(type);
     }
 
     @Override
     public String toString() {
-        return "null";
+        return "zeroinitializer";
     }
 }

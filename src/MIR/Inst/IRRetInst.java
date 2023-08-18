@@ -6,8 +6,8 @@ import MIR.Entity.Entity;
 public class IRRetInst extends IRTerminatorInst {
     public Entity val;
 
-    public IRRetInst(BasicBlock parentBlock, Entity val) {
-        super(parentBlock);
+    public IRRetInst(Entity val) {
+        super();
         this.val = val;
     }
 
