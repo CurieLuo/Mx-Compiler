@@ -1,12 +1,10 @@
 import AST.RootNode;
-
-import Frontend.IRBuilder;
-import MIR.Program;
+import Assembly.AsmModule;
+import IR.IRProgram;
 import Parser.MxLexer;
 import Parser.MxParser;
-import Frontend.ASTBuilder;
-import Frontend.SymbolCollector;
-import Frontend.SemanticChecker;
+import Frontend.*;
+import Backend.*;
 import Util.GlobalScope;
 import Util.MxErrorListener;
 import Util.error.error;
@@ -15,24 +13,31 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-
-//debug
-
+import java.io.OutputStream;
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
-        boolean local = false, syntaxOnly = false;
-        for (var arg : args) {
-            if (arg.equals("--local")) {
-                local = true;
-            } else if (arg.equals("-fsyntax-only")) {
-                syntaxOnly = true;
+        boolean localFlag = false, syntaxOnlyFlag = false, irFlag = false, asmFlag = false;
+        for (var arg : args)
+            switch (arg) {
+                case "-local" -> {
+                    localFlag = true;
+                }
+                case "-fsyntax-only" -> {
+                    syntaxOnlyFlag = true;
+                }
+                case "-ir" -> {
+                    irFlag = true;
+                }
+                case "-S" -> {
+                    asmFlag = true;
+                }
             }
-        }
 
         InputStream input = System.in;
-        if (local) input = new FileInputStream("test.mx");
+        if (localFlag) input = new FileInputStream("test.mx");
         try {
             RootNode ASTRoot;
             GlobalScope gScope = new GlobalScope();
@@ -48,11 +53,19 @@ public class Compiler {
             ASTRoot = (RootNode) astBuilder.visit(parseTreeRoot);
             new SymbolCollector(gScope).visit(ASTRoot);
             new SemanticChecker(gScope).visit(ASTRoot);
-            if (syntaxOnly) return; // semantic part
+            if (syntaxOnlyFlag) return; // semantic part
 
-            Program program = new Program();
+            IRProgram program = new IRProgram();
             new IRBuilder(gScope, program).visit(ASTRoot);
-            System.out.println(program); // IR part debug
+            OutputStream irOutput = irFlag ? System.out : new FileOutputStream("test.ll");
+            irOutput.write(program.toString().getBytes()); // IR part debug
+
+            AsmModule module = new AsmModule();
+            new AsmBuilder(module).visit(program);
+            new NaiveRegAllocator(module).work();
+            new StackAllocator(module).work();
+            OutputStream asmOutput = asmFlag ? System.out : new FileOutputStream("test.s");
+            asmOutput.write(module.toString().getBytes());
         } catch (error er) {
             System.err.println(er);
             throw new RuntimeException();

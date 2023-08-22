@@ -1,7 +1,7 @@
 package Util;
 
 import AST.LoopStmtNode;
-import MIR.Entity.IRRegister;
+import IR.Entity.IRRegister;
 import Util.error.semanticError;
 
 import java.util.HashMap;

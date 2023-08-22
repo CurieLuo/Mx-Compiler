@@ -10,17 +10,10 @@ public class AtomExprNode extends ExprNode {
         super(pos);
         this.content = content;
         switch (content) {
-            case "true":
-            case "false":
-                isBool = true;
-                break;
-            case "null":
-                isNull = true;
-                break;
-            case "this":
-                isThis = true;
-                break;
-            default:
+            case "true", "false" -> isBool = true;
+            case "null" -> isNull = true;
+            case "this" -> isThis = true;
+            default -> {
                 char beg = content.charAt(0);
                 if (beg == '"') {
                     isString = true;
@@ -29,7 +22,7 @@ public class AtomExprNode extends ExprNode {
                             .replace("\\\"", "\""); // unescape
                 } else if ('0' <= beg && beg <= '9') isInt = true;
                 else isIdentifier = true;
-                break;
+            }
         }
         assignable = isIdentifier;
     }

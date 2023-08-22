@@ -1,10 +1,10 @@
 package Util;
 
 import AST.*;
-import MIR.Entity.*;
-import MIR.Type.*;
+import IR.Entity.*;
+import IR.Type.*;
 
-public class Builtins {
+public abstract class Builtins {
     // only for assigning type to expression
     public static Type voidType = new Type("void"),
             nullType = new Type("null"),
@@ -37,7 +37,7 @@ public class Builtins {
             irBoolType = new IRIntType(1),
             irIntType = new IRIntType(32),
             irNullType = new IRPtrType(irVoidType),
-            irStringType = new IRPtrType(irCharType), //TODO use C-string!!!
+            irStringType = new IRPtrType(irCharType),
             irIntPtrType = new IRPtrType(irIntType);
 
     public static IRVoidConst irVoid = new IRVoidConst();
@@ -49,7 +49,7 @@ public class Builtins {
             irIntNegative1 = new IRIntConst(-1),
             irInt4 = new IRIntConst(4);
 
-    public Builtins() {
+    static {
         ParamsListNode paramString = new ParamsListNode(null);
         paramString.types.add(stringType);
         paramString.names.add("str");
@@ -84,5 +84,4 @@ public class Builtins {
         size.returnType = intType;
         arrayClassScope.defineFunc(size);
     }
-
 }

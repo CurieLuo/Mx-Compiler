@@ -1,6 +1,6 @@
 package AST;
 
-import MIR.Entity.Entity;
+import IR.Entity.Entity;
 import Util.ClassScope;
 import Util.position;
 

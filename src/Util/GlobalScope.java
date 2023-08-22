@@ -9,11 +9,8 @@ public class GlobalScope extends Scope {
     private HashMap<String, ClassScope> classes = new HashMap<>();
     private HashMap<String, FuncDefNode> funcs = new HashMap<>();
 
-    private Builtins builtins = new Builtins();
-
     public GlobalScope() {
         super(null);
-
         defineClass(Builtins.stringClass);
         defineClass(Builtins.intClass);
         defineClass(Builtins.boolClass);

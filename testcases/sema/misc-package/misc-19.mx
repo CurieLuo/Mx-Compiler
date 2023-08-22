@@ -17,7 +17,7 @@ class RedBoy{
 	int num;
 };
 
-//global delc
+//globalSymbol delc
 int age = 1000000;
 string eng = "Four score and seven years ago";
 

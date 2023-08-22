@@ -13,7 +13,7 @@ public class Type {
     }
 
     public Type(String name, int dim) {
-        this.name = name;
+        this(name);
         this.dim = dim;
     }
 

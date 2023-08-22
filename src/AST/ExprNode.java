@@ -2,7 +2,7 @@ package AST;
 
 import Util.position;
 import Util.Type;
-import MIR.Entity.Entity;
+import IR.Entity.Entity;
 
 public abstract class ExprNode extends ASTNode {
     public Type type;
