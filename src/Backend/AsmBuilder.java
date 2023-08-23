@@ -19,7 +19,14 @@ public class AsmBuilder implements IRVisitor {
 
     private HashMap<IRBasicBlock, AsmBlock> blocksMap = new HashMap<>();
 
-    private Imm imm1 = new Imm(1), imm2 = new Imm(2);
+    private static Imm imm1 = new Imm(1), imm2 = new Imm(2);
+
+    private static HashMap<Integer, Integer> log2Map = new HashMap<>();
+
+    static {
+        for (int i = 0; i < 31; i++)
+            log2Map.put(1 << i, i);
+    }
 
     public AsmBuilder(AsmModule module) {
         this.module = module;
@@ -46,7 +53,7 @@ public class AsmBuilder implements IRVisitor {
         } else if (entity.reg instanceof GlobalSymbol globalSymbol) {
             VirtualReg ptr = new VirtualReg();
             currentBlock.addInst(new AsmLaInst(ptr, globalSymbol.name));
-            return ptr; // TODO
+            return ptr;
         }
         return entity.reg;
     }
@@ -133,11 +140,11 @@ public class AsmBuilder implements IRVisitor {
 
     @Override
     public void visit(IRBasicBlock it) {
+        // TODO combine icmp & br
         for (var inst : it.insts) {
             inst.accept(this);
         }
         it.terminatorInst.accept(this);
-        // TODO combine icmp & br
     }
 
     @Override
@@ -163,8 +170,38 @@ public class AsmBuilder implements IRVisitor {
 
     @Override
     public void visit(IRBinaryInst it) {
-        currentBlock.addInst(new AsmRTypeInst(it.op, getReg(it.reg), getReg(it.left), getReg(it.right)));
-        // TODO IType & optimize mul/div/rem !!!
+        switch (it.op) {
+            case "mul", "add", "and", "xor", "or" -> {
+                if (it.left instanceof IRConst) {
+                    Entity tmp = it.left;
+                    it.left = it.right;
+                    it.right = tmp;
+                }
+            }
+        }
+
+        Reg reg = getReg(it.reg), lhs = getReg(it.left);
+
+        if (it.right instanceof IRIntConst intConst) {
+            if (it.op.equals("mul") && log2Map.containsKey(intConst.val)) {
+                it.op = "shl";
+                intConst.val = log2Map.get(intConst.val);
+            }
+            switch (it.op) {
+                case "add", "sub", "shl", "ashr", "and", "xor", "or" -> {
+                    if (Math.abs(intConst.val) < 1 << 11) {
+                        if (it.op.equals("sub")) {
+                            it.op = "add";
+                            intConst.val = -intConst.val;
+                        }
+                        currentBlock.addInst(new AsmITypeInst(it.op + "i", reg, lhs, new Imm(intConst.val)));
+                        return;
+                    }
+                }
+            }
+        }
+
+        currentBlock.addInst(new AsmRTypeInst(it.op, reg, lhs, getReg(it.right)));
     }
 
     @Override
@@ -192,7 +229,7 @@ public class AsmBuilder implements IRVisitor {
     @Override
     public void visit(IRGetElementPtrInst it) {
         Reg index = getReg(it.indices.getLast());
-        if (it.pointToType == Builtins.irBoolType || it.pointToType == Builtins.irCharType) {
+        if (it.pointToType.size == 1) {
             currentBlock.addInst(new AsmRTypeInst("add", getReg(it.reg), getReg(it.pointer), index));
             return;
         }
@@ -232,8 +269,8 @@ public class AsmBuilder implements IRVisitor {
 
     @Override
     public void visit(IRLoadInst it) {
-        // TODO
-        Reg reg = ((IRRegister) it.pointer).name.equals("ret.val") ? a0 : getReg(it.reg), ptr = getReg(it.pointer);
+        Reg reg = ((IRRegister) it.pointer).name.equals("ret.val") ? a0 : getReg(it.reg);
+        Reg ptr = getReg(it.pointer);
         load(it.reg.type.size, reg, ptr, 0);
     }
 
@@ -259,7 +296,8 @@ public class AsmBuilder implements IRVisitor {
 
     @Override
     public void visit(IRStoreInst it) {
-        Reg val = getReg(it.val), ptr = getReg(it.pointer);
+        Reg val = getReg(it.val);
+        Reg ptr = getReg(it.pointer);
         store(it.val.type.size, val, ptr, 0);
     }
 }

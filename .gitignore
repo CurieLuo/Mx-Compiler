@@ -5,7 +5,10 @@ gen/
 META-INF/
 result/
 *.exe
+exe
 *.ps
 test.*
 *.iml
 *.jar
+*.ll
+*.s

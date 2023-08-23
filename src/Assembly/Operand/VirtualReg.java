@@ -11,8 +11,7 @@ public class VirtualReg extends Reg {
 
     public VirtualReg(int size) {
         this();
-        // TODO size VirtualReg mismatch!!!!!!!!!
-//        this.size = size;
+        this.size = size;
     }
 
     public static void reset() {

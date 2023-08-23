@@ -4,7 +4,7 @@ import IR.Entity.IRGlobalVar;
 import IR.Entity.IRStringConst;
 
 public class GlobalValue extends GlobalSymbol {
-    int val, size;
+    private int val, size;
 
     public GlobalValue(IRGlobalVar var) {
         super(var.name);

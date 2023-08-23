@@ -607,9 +607,6 @@ public class IRBuilder implements ASTVisitor {
                 op = "add";
                 if (lhs instanceof IRIntConst a && rhs instanceof IRIntConst b) {
                     it.val = new IRIntConst(a.val + b.val);
-                } else if (lhs instanceof IRStringConst a && rhs instanceof IRStringConst b) {
-                    //it.val = program.addStringConst(a.val + b.val);
-                    //TODO const propagation
                 }
             }
             case "-" -> {

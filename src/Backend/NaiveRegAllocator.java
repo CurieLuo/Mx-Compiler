@@ -42,11 +42,11 @@ public class NaiveRegAllocator {
         if (regToAllocate instanceof VirtualReg virtualReg) {
             int offset = initialAddrOffset + virtualReg.id * 4;
             if (offset < 1 << 11) {
-                newInsts.add(new AsmLoadInst(virtualReg.size, ret, sp, new Imm(offset)));
+                newInsts.add(new AsmLoadInst(4, ret, sp, new Imm(offset)));
             } else {
                 newInsts.add(new AsmLiInst(t0, new Imm(offset)));
                 newInsts.add(new AsmRTypeInst("add", t0, t0, sp));
-                newInsts.add(new AsmLoadInst(virtualReg.size, ret, t0));
+                newInsts.add(new AsmLoadInst(4, ret, t0));
             }
             return ret;
         } else return regToAllocate;
@@ -56,11 +56,11 @@ public class NaiveRegAllocator {
         if (regToAllocate instanceof VirtualReg virtualReg) {
             int offset = initialAddrOffset + virtualReg.id * 4;
             if (offset < 1 << 11) {
-                newInsts.add(new AsmStoreInst(virtualReg.size, ret, sp, new Imm(offset)));
+                newInsts.add(new AsmStoreInst(4, ret, sp, new Imm(offset)));
             } else {
                 newInsts.add(new AsmLiInst(t0, new Imm(offset)));
                 newInsts.add(new AsmRTypeInst("add", t0, t0, sp));
-                newInsts.add(new AsmStoreInst(virtualReg.size, ret, t0));
+                newInsts.add(new AsmStoreInst(4, ret, t0));
             }
             return ret;
         } else return regToAllocate;

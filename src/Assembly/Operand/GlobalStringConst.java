@@ -1,7 +1,7 @@
 package Assembly.Operand;
 
 public class GlobalStringConst extends GlobalSymbol {
-    String str;
+    private String str;
 
     public GlobalStringConst(String name, String str) {
         super(name);
