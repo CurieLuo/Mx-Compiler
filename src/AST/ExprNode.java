@@ -2,12 +2,12 @@ package AST;
 
 import Util.position;
 import Util.Type;
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 
 public abstract class ExprNode extends ASTNode {
     public Type type;
     public boolean assignable = false;
-    public Entity val = null;
+    public IREntity val = null;
 
     public ExprNode(position pos) {
         super(pos);

@@ -1,7 +1,10 @@
 package IR.Inst;
 
+import IR.Entity.*;
 import IR.IRBasicBlock;
 import IR.IRVisitor;
+
+import java.util.HashSet;
 
 public abstract class IRInst {
     public IRBasicBlock parentBlock;
@@ -13,4 +16,8 @@ public abstract class IRInst {
 
     @Override
     public abstract String toString(); //debug
+
+    public HashSet<IREntity> getUse() {
+        return new HashSet<>();
+    }
 }

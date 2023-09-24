@@ -34,13 +34,12 @@ public class IRBasicBlock {
     }
 
     public void addInst(IRInst inst) {
-        if (terminatorInst != null) return;
         inst.parentBlock = this;
         if (inst instanceof IRTerminatorInst) {
             terminatorInst = (IRTerminatorInst) inst;
         } else if (inst instanceof IRAllocaInst) {
             inst.parentBlock = parentFunc.entryBlock();
-            parentFunc.allocas.add((IRAllocaInst) inst);
+            parentFunc.allocaInsts.add((IRAllocaInst) inst);
         } else {
             insts.add(inst);
         }

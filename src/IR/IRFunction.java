@@ -14,7 +14,7 @@ public class IRFunction {
     public ArrayList<IRRegister> params = new ArrayList<>();
     public LinkedList<IRBasicBlock> blocks = new LinkedList<>();
 
-    public ArrayList<IRAllocaInst> allocas = new ArrayList<>();
+    public ArrayList<IRAllocaInst> allocaInsts = new ArrayList<>();
     //all alloca instructions are relocated at the start of the function
 
     public IRFunction(String name, IRType returnType, boolean isBuiltin, IRRegister... params) {
@@ -53,7 +53,7 @@ public class IRFunction {
     }
 
     public void finish() {
-        entryBlock().insts.addAll(0, allocas);
+        entryBlock().insts.addAll(0, allocaInsts);
     }
 
     public void accept(IRVisitor visitor) {

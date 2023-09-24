@@ -1,9 +1,12 @@
 package IR.Inst;
 
+import IR.Entity.IREntity;
 import IR.Entity.IRRegister;
 import IR.IRVisitor;
 import IR.Type.IRPtrType;
 import IR.Type.IRType;
+
+import java.util.HashSet;
 
 public class IRAllocaInst extends IRInst {
     public IRRegister reg;

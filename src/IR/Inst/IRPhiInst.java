@@ -1,22 +1,28 @@
 package IR.Inst;
 
 import IR.IRBasicBlock;
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 import IR.Entity.IRRegister;
 import IR.IRVisitor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class IRPhiInst extends IRInst {
-    public IRRegister reg;
-    public ArrayList<Entity> vals = new ArrayList<>();
+    public IRRegister reg, allocaReg = null;
+    public ArrayList<IREntity> vals = new ArrayList<>();
     public ArrayList<IRBasicBlock> sourceBlocks = new ArrayList<>();
 
     public IRPhiInst(IRRegister reg) {
         this.reg = reg;
     }
 
-    public void addSource(IRBasicBlock src, Entity val) {
+    public IRPhiInst(IRRegister reg, IRRegister allocaReg) {
+        this(reg);
+        this.allocaReg = allocaReg;
+    }
+
+    public void addSource(IRBasicBlock src, IREntity val) {
         sourceBlocks.add(src);
         vals.add(val);
     }
@@ -34,5 +40,10 @@ public class IRPhiInst extends IRInst {
             ret.append("[ %s, %%%s ]".formatted(vals.get(i), sourceBlocks.get(i).label));
         }
         return ret.toString();
+    }
+
+    @Override
+    public HashSet<IREntity> getUse() {
+        return new HashSet<>(vals);
     }
 }

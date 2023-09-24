@@ -3,11 +3,11 @@ package IR.Entity;
 import Assembly.Operand.Reg;
 import IR.Type.IRType;
 
-public abstract class Entity {
+public abstract class IREntity {
     public IRType type;
     public Reg reg;
 
-    public Entity(IRType type) {
+    public IREntity(IRType type) {
         this.type = type;
     }
 

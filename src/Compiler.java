@@ -1,5 +1,6 @@
 import AST.RootNode;
 import Assembly.AsmModule;
+import IR.IRFunction;
 import IR.IRProgram;
 import Parser.MxLexer;
 import Parser.MxParser;
@@ -58,7 +59,8 @@ public class Compiler {
 
             IRProgram program = new IRProgram();
             new IRBuilder(gScope, program).visit(ASTRoot);
-            new IROptimizer(program).work();
+//            new IROptimizer(program).work();
+//            program.funcs.forEach(IRFunction::finish);
             OutputStream irOutput = irFlag ? System.out : new FileOutputStream("test.ll");
             irOutput.write(program.toString().getBytes()); // IR part debug
 

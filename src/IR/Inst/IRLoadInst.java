@@ -1,14 +1,16 @@
 package IR.Inst;
 
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 import IR.Entity.IRRegister;
 import IR.IRVisitor;
 
+import java.util.HashSet;
+
 public class IRLoadInst extends IRInst {
     public IRRegister reg;
-    public Entity pointer;
+    public IREntity pointer;
 
-    public IRLoadInst(IRRegister reg, Entity pointer) {
+    public IRLoadInst(IRRegister reg, IREntity pointer) {
         this.reg = reg;
         this.pointer = pointer;
     }
@@ -21,5 +23,12 @@ public class IRLoadInst extends IRInst {
     @Override
     public String toString() {
         return "%s = load %s, %s".formatted(reg, reg.type, pointer.toTypedFormat());
+    }
+
+    @Override
+    public HashSet<IREntity> getUse() {
+        HashSet<IREntity> ret = new HashSet<>();
+        ret.add(pointer);
+        return ret;
     }
 }

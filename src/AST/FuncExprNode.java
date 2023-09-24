@@ -1,6 +1,6 @@
 package AST;
 
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 import Util.ClassScope;
 import Util.position;
 
@@ -10,7 +10,7 @@ public class FuncExprNode extends ExprNode {
     public ArgsListNode args;
 
     public ClassScope cScope = null;
-    public Entity owner = null;
+    public IREntity owner = null;
 
     public FuncExprNode(position pos, String name) {
         super(pos);

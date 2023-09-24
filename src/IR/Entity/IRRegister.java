@@ -2,7 +2,7 @@ package IR.Entity;
 
 import IR.Type.IRType;
 
-public class IRRegister extends Entity {
+public class IRRegister extends IREntity {
     public String name;
     private int id = 0;
     protected static int tmpCnt = 0, cnt = 0;

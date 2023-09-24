@@ -42,7 +42,7 @@ public class AsmBuilder implements IRVisitor {
         return immToReg(val, new VirtualReg());
     }
 
-    public Reg getReg(Entity entity) {
+    public Reg getReg(IREntity entity) {
         if (entity.reg == null) {
             if (entity instanceof IRConst irConst) {
                 int val = irConst.toInt();
@@ -172,7 +172,7 @@ public class AsmBuilder implements IRVisitor {
         switch (it.op) {
             case "mul", "add", "and", "xor", "or" -> {
                 if (it.left instanceof IRConst) {
-                    Entity tmp = it.left;
+                    IREntity tmp = it.left;
                     it.left = it.right;
                     it.right = tmp;
                 }
@@ -277,7 +277,7 @@ public class AsmBuilder implements IRVisitor {
     public void visit(IRPhiInst it) {
         Reg tmp = new VirtualReg(it.reg.type.size);
         for (int i = 0; i < it.vals.size(); i++) {
-            Entity val = it.vals.get(i);
+            IREntity val = it.vals.get(i);
             AsmBlock src = blocksMap.get(it.sourceBlocks.get(i));
             if (val instanceof IRConst constVal)
                 src.phiSrcInsts.add(new AsmLiInst(tmp, new Imm(constVal.toInt())));

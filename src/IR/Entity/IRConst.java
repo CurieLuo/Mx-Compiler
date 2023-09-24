@@ -2,7 +2,7 @@ package IR.Entity;
 
 import IR.Type.IRType;
 
-public abstract class IRConst extends Entity {
+public abstract class IRConst extends IREntity {
     public IRConst(IRType type) {
         super(type);
     }

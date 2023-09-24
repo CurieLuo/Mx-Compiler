@@ -1,12 +1,14 @@
 package IR.Inst;
 
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 import IR.IRVisitor;
 
-public class IRRetInst extends IRTerminatorInst {
-    public Entity val;
+import java.util.HashSet;
 
-    public IRRetInst(Entity val) {
+public class IRRetInst extends IRTerminatorInst {
+    public IREntity val;
+
+    public IRRetInst(IREntity val) {
         this.val = val;
     }
 
@@ -18,5 +20,12 @@ public class IRRetInst extends IRTerminatorInst {
     @Override
     public String toString() {
         return "ret %s".formatted(val.toTypedFormat());
+    }
+
+    @Override
+    public HashSet<IREntity> getUse() {
+        HashSet<IREntity> ret = new HashSet<>();
+        ret.add(val);
+        return ret;
     }
 }

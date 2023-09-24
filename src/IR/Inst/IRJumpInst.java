@@ -1,7 +1,10 @@
 package IR.Inst;
 
+import IR.Entity.IREntity;
 import IR.IRBasicBlock;
 import IR.IRVisitor;
+
+import java.util.HashSet;
 
 public class IRJumpInst extends IRTerminatorInst {
     public IRBasicBlock destBlock;

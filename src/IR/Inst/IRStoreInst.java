@@ -1,13 +1,15 @@
 package IR.Inst;
 
-import IR.Entity.Entity;
+import IR.Entity.IREntity;
 import IR.IRVisitor;
 
-public class IRStoreInst extends IRInst {
-    public Entity val;
-    public Entity pointer;
+import java.util.HashSet;
 
-    public IRStoreInst(Entity val, Entity pointer) {
+public class IRStoreInst extends IRInst {
+    public IREntity val;
+    public IREntity pointer;
+
+    public IRStoreInst(IREntity val, IREntity pointer) {
         this.val = val;
         this.pointer = pointer;
     }
@@ -20,5 +22,13 @@ public class IRStoreInst extends IRInst {
     @Override
     public String toString() {
         return "store %s, %s".formatted(val.toTypedFormat(), pointer.toTypedFormat());
+    }
+
+    @Override
+    public HashSet<IREntity> getUse() {
+        HashSet<IREntity> ret = new HashSet<>();
+        ret.add(val);
+        ret.add(pointer);
+        return ret;
     }
 }

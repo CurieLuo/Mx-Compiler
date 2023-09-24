@@ -234,7 +234,7 @@ public class IRBuilder implements ASTVisitor {
                     IRGlobalVar var = (IRGlobalVar) gScope.getEntity(name);
                     decl.val.accept(this);
                     toRValue(decl.val);
-                    Entity val = decl.val.val;
+                    IREntity val = decl.val.val;
                     if (val instanceof IRConst constVal && !(constVal instanceof IRStringConst)) {
                         var.initVal = constVal;
                     } else {
@@ -248,7 +248,7 @@ public class IRBuilder implements ASTVisitor {
                 if (decl.val != null) {
                     decl.val.accept(this);
                     toRValue(decl.val);
-                    Entity val = decl.val.val;
+                    IREntity val = decl.val.val;
                     currentBlock.addInst(new IRStoreInst(val, var));
                 }
             }
@@ -383,7 +383,7 @@ public class IRBuilder implements ASTVisitor {
         it.expr.accept(this);
     }
 
-    IRRegister visitMember(Entity owner, String name) {
+    IRRegister visitMember(IREntity owner, String name) {
         IRStructType struct = (IRStructType) ((IRPtrType) owner.type).pointToType();
         int index = struct.getIndex(name);
         IRType type = struct.memberTypes.get(index);
@@ -448,11 +448,11 @@ public class IRBuilder implements ASTVisitor {
         currentBlock.addInst(call);
     }
 
-    public IRRegister newArray(IRPtrType type, LinkedList<Entity> initDims) {
+    public IRRegister newArray(IRPtrType type, LinkedList<IREntity> initDims) {
         IRType valType = type.pointToType();
         IRRegister reg = new IRRegister(type);
-        Entity allocSize;
-        Entity length = initDims.pollFirst();
+        IREntity allocSize;
+        IREntity length = initDims.pollFirst();
         if (length instanceof IRIntConst k) {
             allocSize = new IRIntConst(k.val * valType.size + 4);
         } else {
@@ -526,7 +526,7 @@ public class IRBuilder implements ASTVisitor {
             return;
         }
 
-        LinkedList<Entity> initDims = new LinkedList<>();
+        LinkedList<IREntity> initDims = new LinkedList<>();
         for (var dim : it.initDims) {
             dim.accept(this);
             toRValue(dim);
@@ -581,7 +581,7 @@ public class IRBuilder implements ASTVisitor {
         toRValue(it.left, operandType);
         toRValue(it.right, operandType);
 
-        Entity lhs = it.left.val, rhs = it.right.val;
+        IREntity lhs = it.left.val, rhs = it.right.val;
         boolean isCmp = false;
         String op = null;
         switch (it.op) {
@@ -715,7 +715,7 @@ public class IRBuilder implements ASTVisitor {
     public void visit(UnaryExprNode it) {
         it.obj.accept(this);
         toRValue(it.obj);
-        Entity obj = it.obj.val;
+        IREntity obj = it.obj.val;
         IRRegister reg = null;
         if (!(obj instanceof IRConst)) {
             reg = new IRRegister(obj.type);
