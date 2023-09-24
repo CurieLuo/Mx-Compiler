@@ -38,8 +38,8 @@ public class AsmFunction {
 
     @Override
     public String toString() {
-        String ret = "  .globl %s \n".formatted(name);
-        for (var block : blocks) ret += block;
-        return ret;
+        StringBuilder ret = new StringBuilder("  .globl %s \n".formatted(name));
+        for (var block : blocks) ret.append(block);
+        return ret.toString();
     }
 }

@@ -6,7 +6,6 @@ import Assembly.Operand.*;
 import IR.*;
 import IR.Entity.*;
 import IR.Inst.*;
-import Util.Builtins;
 
 import static Assembly.Operand.PhyReg.*;
 
@@ -245,9 +244,9 @@ public class AsmBuilder implements IRVisitor {
         String op = IRIcmpInst.toShortForm(it.op);
         switch (op) {
             case "eq", "ne" -> {
-//                VirtualReg tmp = new VirtualReg();
-                currentBlock.addInst(new AsmRTypeInst("xor", reg, lhs, rhs));
-                currentBlock.addInst(new AsmSetzInst(op, reg, reg));
+                VirtualReg tmp = new VirtualReg();
+                currentBlock.addInst(new AsmRTypeInst("xor", tmp, lhs, rhs));
+                currentBlock.addInst(new AsmSetzInst(op, reg, tmp));
             }
             case "lt", "ge" -> {
                 currentBlock.addInst(new AsmRTypeInst("slt", reg, lhs, rhs));

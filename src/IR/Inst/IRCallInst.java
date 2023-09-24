@@ -28,13 +28,13 @@ public class IRCallInst extends IRInst {
 
     @Override
     public String toString() {
-        String ret = reg == null ? "call void " : "%s = call %s ".formatted(reg, reg.type);
-        ret += "@%s(".formatted(name);
+        StringBuilder ret = new StringBuilder(reg == null ? "call void " : "%s = call %s ".formatted(reg, reg.type));
+        ret.append("@%s(".formatted(name));
         for (int i = 0; i < args.size(); i++) {
-            if (i != 0) ret += ", ";
-            ret += args.get(i).toTypedFormat();
+            if (i != 0) ret.append(", ");
+            ret.append(args.get(i).toTypedFormat());
         }
-        ret += ")";
-        return ret;
+        ret.append(")");
+        return ret.toString();
     }
 }

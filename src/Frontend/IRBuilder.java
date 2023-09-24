@@ -15,18 +15,18 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class IRBuilder implements ASTVisitor {
-    private GlobalScope gScope;
+    private final GlobalScope gScope;
     private Scope currentScope;
 
     private IRStructType currentStruct = null;
     private IRFunction currentFunc = null;
     private IRBasicBlock currentBlock = null;
-    private IRProgram program;
+    private final IRProgram program;
 
     private boolean isDeclared = false, isBuiltin;
 
-    private HashMap<String, IRStructType> structs = new HashMap<>();
-    private HashMap<String, IRFunction> funcs = new HashMap<>();
+    private final HashMap<String, IRStructType> structs = new HashMap<>();
+    private final HashMap<String, IRFunction> funcs = new HashMap<>();
 
     public IRBuilder(GlobalScope gScope, IRProgram program) {
         currentScope = this.gScope = gScope;

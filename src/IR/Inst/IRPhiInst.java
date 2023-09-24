@@ -28,11 +28,11 @@ public class IRPhiInst extends IRInst {
 
     @Override
     public String toString() {
-        String ret = "%s = phi %s ".formatted(reg, reg.type);
+        StringBuilder ret = new StringBuilder("%s = phi %s ".formatted(reg, reg.type));
         for (int i = 0; i < vals.size(); i++) {
-            if (i != 0) ret += ", ";
-            ret += "[ %s, %%%s ]".formatted(vals.get(i), sourceBlocks.get(i).label);
+            if (i != 0) ret.append(", ");
+            ret.append("[ %s, %%%s ]".formatted(vals.get(i), sourceBlocks.get(i).label));
         }
-        return ret;
+        return ret.toString();
     }
 }

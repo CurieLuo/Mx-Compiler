@@ -3,10 +3,10 @@ package Assembly;
 import Assembly.Inst.AsmBTypeInst;
 import Assembly.Inst.AsmInst;
 import Assembly.Inst.AsmJTypeInst;
-import Assembly.Inst.AsmJumpInst;
-import Assembly.Operand.GlobalSymbol;
+import Assembly.Operand.Reg;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class AsmBlock {
@@ -16,6 +16,9 @@ public class AsmBlock {
     public ArrayList<AsmInst> phiSrcInsts = new ArrayList<>();
     public LinkedList<AsmBlock> pred = new LinkedList<>(), succ = new LinkedList<>();
     private static int cnt = 0;
+
+    // liveness analysis
+    public HashSet<Reg> def = new HashSet<>(), use = new HashSet<>();
 
     public AsmBlock() {
         label = ".LBB_" + cnt++;
@@ -37,8 +40,8 @@ public class AsmBlock {
 
     @Override
     public String toString() {
-        String ret = label + ":\n";
-        for (var inst : insts) ret += "  %s\n".formatted(inst);
-        return ret;
+        StringBuilder ret = new StringBuilder(label + ":\n");
+        for (var inst : insts) ret.append("  %s\n".formatted(inst));
+        return ret.toString();
     }
 }

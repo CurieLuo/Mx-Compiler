@@ -7,7 +7,7 @@ import Util.GlobalScope;
 public class SymbolCollector implements ASTVisitor {
 
     private ClassScope cScope = null;
-    private GlobalScope gScope;
+    private final GlobalScope gScope;
 
     public SymbolCollector(GlobalScope gScope) {
         this.gScope = gScope;

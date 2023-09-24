@@ -26,12 +26,12 @@ public class IRStructType extends IRType {
     }
 
     public String toDefFormat() {
-        String ret = "%s = type { ".formatted(this);
+        StringBuilder ret = new StringBuilder("%s = type { ".formatted(this));
         for (int i = 0; i < memberTypes.size(); i++) {
-            if (i != 0) ret += ", ";
-            ret += memberTypes.get(i);
+            if (i != 0) ret.append(", ");
+            ret.append(memberTypes.get(i));
         }
-        ret += " }\n";
-        return ret;
+        ret.append(" }\n");
+        return ret.toString();
     }
 }

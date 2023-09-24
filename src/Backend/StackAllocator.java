@@ -7,7 +7,7 @@ import Assembly.Operand.*;
 import static Assembly.Operand.PhyReg.*;
 
 public class StackAllocator {
-    private AsmModule module;
+    private final AsmModule module;
 
     public StackAllocator(AsmModule module) {
         this.module = module;

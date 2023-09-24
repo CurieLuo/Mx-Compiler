@@ -62,18 +62,18 @@ public class IRFunction {
 
     @Override
     public String toString() {
-        String ret = "%s dso_local %s @%s(".formatted(isBuiltin ? "declare" : "define", returnType, name);
+        StringBuilder ret = new StringBuilder("%s dso_local %s @%s(".formatted(isBuiltin ? "declare" : "define", returnType, name));
         for (int i = 0; i < params.size(); i++) {
-            if (i != 0) ret += ", ";
-            if (isBuiltin) ret += params.get(i).type;
-            else ret += params.get(i).toTypedFormat();
+            if (i != 0) ret.append(", ");
+            if (isBuiltin) ret.append(params.get(i).type);
+            else ret.append(params.get(i).toTypedFormat());
         }
-        ret += ")";
+        ret.append(")");
         if (!isBuiltin) {
-            ret += "{\n";
-            for (var block : blocks) ret += block;
-            ret += "}\n";
+            ret.append("{\n");
+            for (var block : blocks) ret.append(block);
+            ret.append("}\n");
         }
-        return ret;
+        return ret.toString();
     }
 }

@@ -275,14 +275,7 @@ public class ASTBuilder extends MxParserBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitAtom(MxParser.AtomContext ctx) {
-        AtomExprNode atom = new AtomExprNode(new position(ctx), ctx.getText());
-//        if (ctx.Identifier() != null) atom.isIdentifier = true;
-//        else if (ctx.This() != null) atom.isThis = true;
-//        else if (ctx.Null() != null) atom.isNull = true;
-//        else if (ctx.True() != null || ctx.False() != null) atom.isBool = true;
-//        else if (ctx.IntLiteral() != null) atom.isInt = true;
-//        else if (ctx.StringLiteral() != null) atom.isString = true;
-        return atom;
+        return new AtomExprNode(new position(ctx), ctx.getText());
     }
 
     @Override

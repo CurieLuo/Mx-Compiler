@@ -30,9 +30,9 @@ public class IRGetElementPtrInst extends IRInst {
 
     @Override
     public String toString() {
-        String ret = "%s = getelementptr %s, %s".formatted(reg, pointToType, pointer.toTypedFormat());
+        StringBuilder ret = new StringBuilder("%s = getelementptr %s, %s".formatted(reg, pointToType, pointer.toTypedFormat()));
         for (var index : indices)
-            ret += ", " + index.toTypedFormat();
-        return ret;
+            ret.append(", ").append(index.toTypedFormat());
+        return ret.toString();
     }
 }

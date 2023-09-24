@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class SemanticChecker implements ASTVisitor {
 
     private Scope currentScope;
-    private GlobalScope gScope;
+    private final GlobalScope gScope;
 
     private boolean functionReturns; //non-void function definition must have a return statement
 

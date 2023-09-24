@@ -4,6 +4,7 @@ import IR.IRProgram;
 import Parser.MxLexer;
 import Parser.MxParser;
 import Frontend.*;
+import Optimize.*;
 import Backend.*;
 import Util.GlobalScope;
 import Util.MxErrorListener;
@@ -57,6 +58,7 @@ public class Compiler {
 
             IRProgram program = new IRProgram();
             new IRBuilder(gScope, program).visit(ASTRoot);
+            new IROptimizer(program).work();
             OutputStream irOutput = irFlag ? System.out : new FileOutputStream("test.ll");
             irOutput.write(program.toString().getBytes()); // IR part debug
 
@@ -65,7 +67,7 @@ public class Compiler {
             new NaiveRegAllocator(module).work();
             new StackAllocator(module).work();
             OutputStream asmOutput = asmFlag ? System.out : new FileOutputStream("test.s");
-            asmOutput.write(module.toString().getBytes());
+            asmOutput.write(module.toString().getBytes()); // assembly part
         } catch (error er) {
             System.err.println(er);
             throw new RuntimeException();

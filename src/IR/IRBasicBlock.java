@@ -15,6 +15,19 @@ public class IRBasicBlock {
 
     private static int cnt = 0;
 
+    // for optimization
+
+    public LinkedList<IRBasicBlock> pred = new LinkedList<>(), succ = new LinkedList<>();
+
+    public void addEdgeTo(IRBasicBlock dest) {
+        // add Edge from this to dest in CFG
+        succ.add(dest);
+        dest.pred.add(this);
+    }
+
+    public IRBasicBlock idom = null; // immediate dominator
+    public LinkedList<IRBasicBlock> domFrontier = new LinkedList<>(), domChildren = new LinkedList<>();
+
     public IRBasicBlock(String label) {
         if (!(label.equals("entry") || label.equals("return"))) label += cnt++;
         this.label = label;
@@ -51,9 +64,9 @@ public class IRBasicBlock {
 
     @Override
     public String toString() {
-        String ret = label + ":\n";
-        for (var inst : insts) ret += "  " + inst + "\n";
-        if (terminatorInst != null) ret += "  " + terminatorInst + "\n";
-        return ret;
+        StringBuilder ret = new StringBuilder(label + ":\n");
+        for (var inst : insts) ret.append("  ").append(inst).append("\n");
+        if (terminatorInst != null) ret.append("  ").append(terminatorInst).append("\n");
+        return ret.toString();
     }
 }

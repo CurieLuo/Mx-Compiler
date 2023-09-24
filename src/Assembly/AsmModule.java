@@ -27,22 +27,22 @@ public class AsmModule {
 
     @Override
     public String toString() {
-        String ret = "  .text\n";
+        StringBuilder ret = new StringBuilder("  .text\n");
         for (var func : funcs) {
-            ret += func + "\n";
+            ret.append(func).append("\n");
         }
         if (!globalValues.isEmpty()) {
-            ret += "\n  .data\n";
+            ret.append("\n  .data\n");
             for (var symbol : globalValues) {
-                ret += symbol;
+                ret.append(symbol);
             }
         }
         if (!stringConsts.isEmpty()) {
-            ret += "\n  .rodata\n";
+            ret.append("\n  .rodata\n");
             for (var symbol : stringConsts) {
-                ret += symbol;
+                ret.append(symbol);
             }
         }
-        return ret;
+        return ret.toString();
     }
 }
