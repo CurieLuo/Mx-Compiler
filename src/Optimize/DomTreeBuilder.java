@@ -25,6 +25,7 @@ public class DomTreeBuilder {
     }
 
     private void visit(IRFunction it) {
+        if (it.isBuiltin) return;
         visited.clear();
         order.clear();
         blocks.clear();
@@ -53,16 +54,16 @@ public class DomTreeBuilder {
                     changed = true;
                 }
             }
-            for (var block : blocks) block.idom.domChildren.add(block);
-            // calculate dominance frontier
-            for (var block : blocks) {
-                if (block.pred.size() < 2) continue;
-                for (var pred : block.pred) {
-                    var runner = pred;
-                    while (runner != block.idom) {
-                        runner.domFrontier.add(block);
-                        runner = runner.idom;
-                    }
+        }
+        for (var block : blocks) block.idom.domChildren.add(block);
+        // calculate dominance frontier
+        for (var block : blocks) {
+            if (block.pred.size() < 2) continue;
+            for (var pred : block.pred) {
+                var runner = pred;
+                while (runner != block.idom) {
+                    runner.domFrontier.add(block);
+                    runner = runner.idom;
                 }
             }
         }
@@ -77,8 +78,8 @@ public class DomTreeBuilder {
     private IRBasicBlock intersect(IRBasicBlock b1, IRBasicBlock b2) {
         // least common ancestor on dominator tree
         while (b1 != b2) {
-            while (order.get(b1) < order.get(b2)) b1 = b1.idom;
-            while (order.get(b2) < order.get(b1)) b2 = b2.idom;
+            while (order.get(b1) > order.get(b2)) b1 = b1.idom;
+            while (order.get(b2) > order.get(b1)) b2 = b2.idom;
         }
         return b1;
     }

@@ -3,6 +3,7 @@ package Optimize;
 import IR.*;
 import IR.Inst.*;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class CFGBuilder {
@@ -17,6 +18,7 @@ public class CFGBuilder {
     }
 
     private void visit(IRFunction it) {
+        if (it.isBuiltin) return;
         for (var block : it.blocks) {
             if (block.terminatorInst instanceof IRBranchInst branchInst) {
                 block.addEdgeTo(branchInst.trueBlock);
@@ -27,13 +29,23 @@ public class CFGBuilder {
         }
 
         LinkedList<IRBasicBlock> blocks = new LinkedList<>();
+        boolean changed = true;
+        HashSet<IRBasicBlock> visited = new HashSet<>();
+        while (changed) {
+            changed = false;
+            for (var block : it.blocks) {
+                if (block != it.entryBlock() && block.pred.isEmpty() && !visited.contains(block)) {
+                    visited.add(block);
+                    changed = true;
+                    for (var succ : block.succ) {
+                        succ.pred.remove(block);
+                    }
+                }
+            }
+        }
         for (var block : it.blocks) {
             if (block == it.entryBlock() || !block.pred.isEmpty()) {
                 blocks.add(block);
-            } else {
-                for (var succ : block.succ) {
-                    succ.pred.remove(block);
-                }
             }
         }
         it.blocks = blocks;

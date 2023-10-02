@@ -28,4 +28,9 @@ public class IRRetInst extends IRTerminatorInst {
         ret.add(val);
         return ret;
     }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (val == val0) val = val1;
+    }
 }

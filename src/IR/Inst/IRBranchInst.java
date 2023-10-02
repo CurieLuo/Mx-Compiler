@@ -32,4 +32,9 @@ public class IRBranchInst extends IRTerminatorInst {
         ret.add(condition);
         return ret;
     }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (condition == val0) condition = val1;
+    }
 }

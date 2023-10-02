@@ -8,9 +8,9 @@ import java.util.HashSet;
 
 public class IRLoadInst extends IRInst {
     public IRRegister reg;
-    public IREntity pointer;
+    public IRRegister pointer;
 
-    public IRLoadInst(IRRegister reg, IREntity pointer) {
+    public IRLoadInst(IRRegister reg, IRRegister pointer) {
         this.reg = reg;
         this.pointer = pointer;
     }
@@ -30,5 +30,10 @@ public class IRLoadInst extends IRInst {
         HashSet<IREntity> ret = new HashSet<>();
         ret.add(pointer);
         return ret;
+    }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (pointer == val0) pointer = (IRRegister) val1;
     }
 }

@@ -1,5 +1,6 @@
 package Optimize;
 
+import IR.IRFunction;
 import IR.IRProgram;
 
 public class IROptimizer {
@@ -10,8 +11,9 @@ public class IROptimizer {
     }
 
     public void work() {
-//        new CFGBuilder(program).work();
-//        new DomTreeBuilder(program).work();
-//        new Mem2Reg(program).work();
+        new CFGBuilder(program).work();
+        new DomTreeBuilder(program).work();
+        new Mem2Reg(program).work();
+//        program.funcs.forEach(IRFunction::finish); // TODO
     }
 }

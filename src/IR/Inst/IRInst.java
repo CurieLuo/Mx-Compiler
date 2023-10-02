@@ -20,4 +20,7 @@ public abstract class IRInst {
     public HashSet<IREntity> getUse() {
         return new HashSet<>();
     }
+
+    public void replaceUse(IREntity val0, IREntity val1) {
+    }
 }

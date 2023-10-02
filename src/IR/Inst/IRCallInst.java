@@ -41,7 +41,11 @@ public class IRCallInst extends IRInst {
 
     @Override
     public HashSet<IREntity> getUse() {
-        HashSet<IREntity> ret = new HashSet<>(args);
-        return ret;
+        return new HashSet<>(args);
+    }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        for (int i = 0; i < args.size(); i++) if (args.get(i) == val0) args.set(i, val1);
     }
 }

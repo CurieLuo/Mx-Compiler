@@ -53,7 +53,8 @@ public class IRFunction {
     }
 
     public void finish() {
-        entryBlock().insts.addAll(0, allocaInsts);
+        if (isBuiltin) return;
+        entryBlock().insts.addAll(0, allocaInsts); // TODO not needed if mem2reg is switched on
     }
 
     public void accept(IRVisitor visitor) {

@@ -1,9 +1,6 @@
 package IR;
 
-import IR.Inst.IRAllocaInst;
-import IR.Inst.IRInst;
-import IR.Inst.IRJumpInst;
-import IR.Inst.IRTerminatorInst;
+import IR.Inst.*;
 
 import java.util.LinkedList;
 
@@ -16,7 +13,7 @@ public class IRBasicBlock {
     private static int cnt = 0;
 
     // for optimization
-
+    public LinkedList<IRPhiInst> phiInsts = new LinkedList<>();
     public LinkedList<IRBasicBlock> pred = new LinkedList<>(), succ = new LinkedList<>();
 
     public void addEdgeTo(IRBasicBlock dest) {
@@ -34,8 +31,10 @@ public class IRBasicBlock {
     }
 
     public void addInst(IRInst inst) {
-        inst.parentBlock = this;
-        if (inst instanceof IRTerminatorInst) {
+        if (inst instanceof IRPhiInst phiInst && phiInst.allocaPointer != null) {
+            phiInsts.add(phiInst); // use Mem2Reg to eliminate these phi instructions
+        } else if (inst instanceof IRTerminatorInst) {
+            if (terminatorInst != null) return; // TODO
             terminatorInst = (IRTerminatorInst) inst;
         } else if (inst instanceof IRAllocaInst) {
             inst.parentBlock = parentFunc.entryBlock();
@@ -43,6 +42,7 @@ public class IRBasicBlock {
         } else {
             insts.add(inst);
         }
+        inst.parentBlock = this;
     }
 
     public void setJump(IRBasicBlock dest) {

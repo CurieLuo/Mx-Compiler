@@ -1,15 +1,16 @@
 package IR.Inst;
 
 import IR.Entity.IREntity;
+import IR.Entity.IRRegister;
 import IR.IRVisitor;
 
 import java.util.HashSet;
 
 public class IRStoreInst extends IRInst {
     public IREntity val;
-    public IREntity pointer;
+    public IRRegister pointer;
 
-    public IRStoreInst(IREntity val, IREntity pointer) {
+    public IRStoreInst(IREntity val, IRRegister pointer) {
         this.val = val;
         this.pointer = pointer;
     }
@@ -30,5 +31,11 @@ public class IRStoreInst extends IRInst {
         ret.add(val);
         ret.add(pointer);
         return ret;
+    }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (val == val0) val = val1;
+        if (pointer == val0) pointer = (IRRegister) val1;
     }
 }

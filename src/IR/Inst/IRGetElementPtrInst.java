@@ -43,4 +43,10 @@ public class IRGetElementPtrInst extends IRInst {
         ret.add(pointer);
         return ret;
     }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (pointer == val0) pointer = val1;
+        for (int i = 0; i < indices.size(); i++) if (indices.get(i) == val0) indices.set(i, val1);
+    }
 }

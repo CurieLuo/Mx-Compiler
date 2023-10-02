@@ -65,7 +65,7 @@ public class IRBuilder implements ASTVisitor {
     private void toRValue(ExprNode it) {
         if (it.assignable) {
             IRRegister val = new IRRegister(((IRPtrType) it.val.type).pointToType());
-            currentBlock.addInst(new IRLoadInst(val, it.val));
+            currentBlock.addInst(new IRLoadInst(val, (IRRegister) it.val));
             it.val = val;
         }
     }
@@ -102,7 +102,6 @@ public class IRBuilder implements ASTVisitor {
             if (def instanceof VarDefStmtNode) def.accept(this);
         }
         if (currentBlock.terminatorInst == null) currentBlock.setJump(currentFunc.returnBlock());
-        program.initFunc.finish();
 
         for (var def : it.defs) {
             if (!(def instanceof VarDefStmtNode)) {
@@ -176,7 +175,6 @@ public class IRBuilder implements ASTVisitor {
                 currentBlock.addInst(new IRRetInst(Builtins.irVoid));
             }
 
-            func.finish();
         }
 
         currentFunc = null;
@@ -208,7 +206,6 @@ public class IRBuilder implements ASTVisitor {
             currentBlock = func.returnBlock();
             currentBlock.addInst(new IRRetInst(Builtins.irVoid));
 
-            func.finish();
         }
 
         currentFunc = null;
@@ -457,7 +454,7 @@ public class IRBuilder implements ASTVisitor {
             allocSize = new IRIntConst(k.val * valType.size + 4);
         } else {
             IRRegister actualSize = new IRRegister(irIntType);
-            currentBlock.addInst(new IRBinaryInst((IRRegister) actualSize, "mul", length, new IRIntConst(valType.size)));
+            currentBlock.addInst(new IRBinaryInst(actualSize, "mul", length, new IRIntConst(valType.size)));
             allocSize = new IRRegister(irIntType);
             currentBlock.addInst(new IRBinaryInst((IRRegister) allocSize, "add", actualSize, irInt4));
         }
@@ -749,14 +746,6 @@ public class IRBuilder implements ASTVisitor {
     @Override
     public void visit(TernaryExprNode it) {
         IRType type = toIRType(it.type);
-        boolean notVoid = !it.type.isVoid();
-        IRRegister reg = null;
-        IRPhiInst phiInst = null;
-        if (notVoid) {
-            reg = new IRRegister(type);
-            it.val = reg;
-            phiInst = new IRPhiInst(reg);
-        } else it.val = irVoid;
 
         it.condition.accept(this);
         toRValue(it.condition);
@@ -769,17 +758,24 @@ public class IRBuilder implements ASTVisitor {
         currentBlock = trueBlock;
         it.left.accept(this);
         toRValue(it.left, type);
+        trueBlock = currentBlock;
         currentBlock.setJump(endBlock);
-        if (notVoid) phiInst.addSource(currentBlock, it.left.val);
 
         currentBlock = falseBlock;
         it.right.accept(this);
         toRValue(it.right, type);
+        falseBlock = currentBlock;
         currentBlock.setJump(endBlock);
-        if (notVoid) phiInst.addSource(currentBlock, it.right.val);
 
         currentBlock = endBlock;
-        if (notVoid) currentBlock.addInst(phiInst);
+        if (!it.type.isVoid()) {
+            IRRegister reg = new IRRegister(type);
+            it.val = reg;
+            IRPhiInst phiInst = new IRPhiInst(reg);
+            phiInst.addSource(trueBlock, it.left.val);
+            phiInst.addSource(falseBlock, it.right.val);
+            currentBlock.addInst(phiInst);
+        } else it.val = irVoid;
     }
 
     @Override
@@ -787,16 +783,16 @@ public class IRBuilder implements ASTVisitor {
         it.left.accept(this);
         it.right.accept(this);
         toRValue(it.right, ((IRPtrType) it.left.val.type).pointToType());
-        currentBlock.addInst(new IRStoreInst(it.right.val, it.left.val));
+        currentBlock.addInst(new IRStoreInst(it.right.val, (IRRegister) it.left.val));
     }
 
     private IRRegister visitUpdateExpr(ExprNode obj, String op) {
         obj.accept(this);
         IRRegister reg0 = new IRRegister(((IRPtrType) obj.val.type).pointToType()), reg1 = new IRRegister(reg0.type);
-        currentBlock.addInst(new IRLoadInst(reg0, obj.val));
+        currentBlock.addInst(new IRLoadInst(reg0, (IRRegister) obj.val));
         IRIntConst delta = op.equals("++") ? irInt1 : irIntNegative1;
         currentBlock.addInst(new IRBinaryInst(reg1, "add", reg0, delta));
-        currentBlock.addInst(new IRStoreInst(reg1, obj.val));
+        currentBlock.addInst(new IRStoreInst(reg1, (IRRegister) obj.val));
         return reg0;
     }
 

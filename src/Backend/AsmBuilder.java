@@ -6,21 +6,22 @@ import Assembly.Operand.*;
 import IR.*;
 import IR.Entity.*;
 import IR.Inst.*;
+import Util.Builtins;
 
 import static Assembly.Operand.PhyReg.*;
 
 import java.util.HashMap;
 
 public class AsmBuilder implements IRVisitor {
-    private AsmModule module;
+    private final AsmModule module;
     private AsmFunction currentFunc = null;
     private AsmBlock currentBlock = null;
 
-    private HashMap<IRBasicBlock, AsmBlock> blocksMap = new HashMap<>();
+    private final HashMap<IRBasicBlock, AsmBlock> blocksMap = new HashMap<>();
 
-    private static Imm imm1 = new Imm(1), imm2 = new Imm(2);
+    private static final Imm imm1 = new Imm(1), imm2 = new Imm(2);
 
-    private static HashMap<Integer, Integer> log2Map = new HashMap<>();
+    private static final HashMap<Integer, Integer> log2Map = new HashMap<>();
 
     static {
         for (int i = 0; i < 31; i++)
@@ -47,8 +48,7 @@ public class AsmBuilder implements IRVisitor {
             if (entity instanceof IRConst irConst) {
                 int val = irConst.toInt();
                 return immToReg(val);
-            }
-            entity.reg = new VirtualReg(entity.type.size);
+            } else entity.reg = new VirtualReg(entity.type.size);
         } else if (entity.reg instanceof GlobalSymbol globalSymbol) {
             VirtualReg ptr = new VirtualReg();
             currentBlock.addInst(new AsmLaInst(ptr, globalSymbol.name));
@@ -133,7 +133,7 @@ public class AsmBuilder implements IRVisitor {
 //            currentFunc.addLastInst(new AsmMvInst(reg, tmp));
 //        }
 
-        currentFunc.blocks.forEach(block -> block.finish());
+        currentFunc.blocks.forEach(AsmBlock::finish);
         currentFunc.virtualRegCount = VirtualReg.count;
     }
 
@@ -268,7 +268,7 @@ public class AsmBuilder implements IRVisitor {
 
     @Override
     public void visit(IRLoadInst it) {
-        Reg reg = ((IRRegister) it.pointer).name.equals("ret.val") ? a0 : getReg(it.reg);
+        Reg reg = getReg(it.reg);
         Reg ptr = getReg(it.pointer);
         load(it.reg.type.size, reg, ptr, 0);
     }
@@ -279,16 +279,21 @@ public class AsmBuilder implements IRVisitor {
         for (int i = 0; i < it.vals.size(); i++) {
             IREntity val = it.vals.get(i);
             AsmBlock src = blocksMap.get(it.sourceBlocks.get(i));
-            if (val instanceof IRConst constVal)
-                src.phiSrcInsts.add(new AsmLiInst(tmp, new Imm(constVal.toInt())));
-            else
+            if (val instanceof IRConst irConst && !(irConst instanceof IRStringConst))
+                src.phiSrcInsts.add(new AsmLiInst(tmp, new Imm(irConst.toInt())));
+            else {
+                AsmBlock tmpBlock = currentBlock;
+                currentBlock = src;
                 src.phiSrcInsts.add(new AsmMvInst(tmp, getReg(val)));
+                currentBlock = tmpBlock;
+            }
         }
         currentBlock.addInst(new AsmMvInst(getReg(it.reg), tmp));
     }
 
     @Override
     public void visit(IRRetInst it) {
+        if (it.val != Builtins.irVoid) currentBlock.addInst(new AsmMvInst(a0, getReg(it.val)));
         load(4, ra, sp, currentFunc.paramSpaceSize);
         // add ret instruction after stack allocation
     }

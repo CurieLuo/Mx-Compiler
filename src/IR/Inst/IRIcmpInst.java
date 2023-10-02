@@ -43,4 +43,10 @@ public class IRIcmpInst extends IRInst {
         ret.add(right);
         return ret;
     }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        if (left == val0) left = val1;
+        if (right == val0) right = val1;
+    }
 }

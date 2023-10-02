@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class IRPhiInst extends IRInst {
-    public IRRegister reg, allocaReg = null;
+    public IRRegister reg, allocaPointer = null;
     public ArrayList<IREntity> vals = new ArrayList<>();
     public ArrayList<IRBasicBlock> sourceBlocks = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class IRPhiInst extends IRInst {
 
     public IRPhiInst(IRRegister reg, IRRegister allocaReg) {
         this(reg);
-        this.allocaReg = allocaReg;
+        this.allocaPointer = allocaReg;
     }
 
     public void addSource(IRBasicBlock src, IREntity val) {
@@ -45,5 +45,10 @@ public class IRPhiInst extends IRInst {
     @Override
     public HashSet<IREntity> getUse() {
         return new HashSet<>(vals);
+    }
+
+    @Override
+    public void replaceUse(IREntity val0, IREntity val1) {
+        for (int i = 0; i < vals.size(); i++) if (vals.get(i) == val0) vals.set(i, val1);
     }
 }
