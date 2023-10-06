@@ -591,13 +591,13 @@ public class IRBuilder implements ASTVisitor {
             case "/" -> {
                 op = "sdiv";
                 if (lhs instanceof IRIntConst a && rhs instanceof IRIntConst b) {
-                    it.val = new IRIntConst(a.val / b.val);
+                    if (b.val != 0) it.val = new IRIntConst(a.val / b.val);
                 }
             }
             case "%" -> {
                 op = "srem";
                 if (lhs instanceof IRIntConst a && rhs instanceof IRIntConst b) {
-                    it.val = new IRIntConst(a.val % b.val);
+                    if (b.val != 0) it.val = new IRIntConst(a.val % b.val);
                 }
             }
             case "+" -> {
@@ -634,6 +634,12 @@ public class IRBuilder implements ASTVisitor {
                 op = "xor";
                 if (lhs instanceof IRIntConst a && rhs instanceof IRIntConst b) {
                     it.val = new IRIntConst(a.val ^ b.val);
+                }
+            }
+            case "|" -> {
+                op = "or";
+                if (lhs instanceof IRIntConst a && rhs instanceof IRIntConst b) {
+                    it.val = new IRIntConst(a.val | b.val);
                 }
             }
             case "<" -> {
