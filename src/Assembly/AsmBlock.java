@@ -14,11 +14,12 @@ public class AsmBlock {
     public LinkedList<AsmInst> insts = new LinkedList<>();
     private ArrayList<AsmInst> BnJInsts = new ArrayList<>(); // B-Type and J-Type
     public ArrayList<AsmInst> phiSrcInsts = new ArrayList<>();
-    public LinkedList<AsmBlock> pred = new LinkedList<>(), succ = new LinkedList<>();
     private static int cnt = 0;
 
-    // liveness analysis
-    public HashSet<Reg> def = new HashSet<>(), use = new HashSet<>();
+    // for liveness analysis & register allocation
+    public LinkedList<AsmBlock> pred = new LinkedList<>(), succ = new LinkedList<>();
+    public HashSet<Reg> def = new HashSet<>(), use = new HashSet<>(),
+            liveIn = new HashSet<>(), liveOut = new HashSet<>();
 
     public AsmBlock() {
         label = ".LBB_" + cnt++;

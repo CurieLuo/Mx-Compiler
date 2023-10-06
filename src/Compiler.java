@@ -60,7 +60,6 @@ public class Compiler {
             IRProgram program = new IRProgram();
             new IRBuilder(gScope, program).visit(ASTRoot);
             new IROptimizer(program).work();
-            //TODO new phi instructions must be eliminated or added to block.insts
             OutputStream irOutput = irFlag ? System.out : new FileOutputStream("test.ll");
             irOutput.write(program.toString().getBytes()); // IR part debug
 

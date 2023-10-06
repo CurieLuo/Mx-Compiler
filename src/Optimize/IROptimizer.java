@@ -14,6 +14,6 @@ public class IROptimizer {
         new CFGBuilder(program).work();
         new DomTreeBuilder(program).work();
         new Mem2Reg(program).work();
-//        program.funcs.forEach(IRFunction::finish); // TODO
+//        program.funcs.forEach(IRFunction::finish); // not needed if mem2reg is switched on
     }
 }

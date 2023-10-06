@@ -25,7 +25,6 @@ public class Scope {
     public Type returnType = null,
             classType = null;
     public ClassScope classScope = null;
-    // record nodes???
 
     public void defineVar(String name, Type t, position pos) {
         //TODO clash with global function (what about class scope?)

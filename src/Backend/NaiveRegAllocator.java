@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import static Assembly.Operand.PhyReg.*;
 
 public class NaiveRegAllocator {
-    private AsmModule module;
+    private final AsmModule module;
     private int initialAddrOffset;
     private LinkedList<AsmInst> newInsts;
 

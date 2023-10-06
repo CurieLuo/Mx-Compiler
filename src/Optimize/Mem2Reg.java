@@ -35,7 +35,6 @@ public class Mem2Reg {
 
     private void promote(IRAllocaInst it) {
         if (!isPromotable(it)) return; // TODO
-//        if (currentFunc.name.equals("is_prime")) System.out.println(it);
         LinkedList<IRBasicBlock> queue = new LinkedList<>();
         for (var block : currentFunc.blocks) {
             for (var inst : block.insts) {
@@ -82,7 +81,7 @@ public class Mem2Reg {
             if (inst instanceof IRAllocaInst allocaInst && promotable.contains(allocaInst.reg)) {
                 continue; // remove promoted alloca instructions
             } else if (inst instanceof IRLoadInst loadInst && promotable.contains(loadInst.pointer)) {
-                var newReg = replacement.get(loadInst.pointer); // TODO
+                var newReg = replacement.get(loadInst.pointer);
                 for (int j = i + 1; j < it.insts.size(); j++) {
                     it.insts.get(j).replaceUse(loadInst.reg, newReg);
                 }
@@ -113,6 +112,7 @@ public class Mem2Reg {
     }
 
     private void finish(IRBasicBlock it) {
+        // TODO simplify
         for (int i = it.phiInsts.size() - 1; i >= 0; i--) {
             it.insts.addFirst(it.phiInsts.get(i));
         }

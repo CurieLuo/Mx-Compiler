@@ -7,8 +7,8 @@ public class PhyReg extends Reg {
     public String name;
     int id;
 
-    private static ArrayList<PhyReg> regsList = new ArrayList<>();
-    private static HashMap<String, PhyReg> regsMap = new HashMap<>();
+    private static final ArrayList<PhyReg> regsList = new ArrayList<>();
+    private static final HashMap<String, PhyReg> regsMap = new HashMap<>();
 
     public static ArrayList<PhyReg> calleeSaved = new ArrayList<>();
 
